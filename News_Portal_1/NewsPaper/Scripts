@@ -1,0 +1,63 @@
+from news.models import Author, Category, Post, Comment, User, PostCategory
+
+User1 = User.objects.create_user('Витя')
+User2 = User.objects.create_user('Петя')
+
+Author1 = Author.objects.create(user = User1)
+Author2 = Author.objects.create(user = User2)
+
+Category1 = Category.objects.create(category_name = 'Sport')
+Category2 = Category.objects.create(category_name = 'Weather')
+Category3 = Category.objects.create(category_name = 'Politics')
+Category4 = Category.objects.create(category_name = 'Health')
+
+Post1 = Post.objects.create(title = 'aaaaa', content = 'bbbbb', post_type = 'news', author = Author1)
+Post2 = Post.objects.create(title = 'ccccc', content = 'ddddd', post_type = 'artc', author = Author1)
+Post3 = Post.objects.create(title = 'eeeee', content = 'fffff', post_type = 'artc', author = Author2)
+
+PostCategory1 = PostCategory.objects.create(post = Post1, category = Category1)
+PostCategory1 = PostCategory.objects.create(post = Post1, category = Category2)
+PostCategory2 = PostCategory.objects.create(post = Post2, category = Category2)
+PostCategory2 = PostCategory.objects.create(post = Post2, category = Category4)
+PostCategory3 = PostCategory.objects.create(post = Post3, category = Category3)
+PostCategory3 = PostCategory.objects.create(post = Post3, category = Category1)
+
+Comment1 = Comment.objects.create(text = 'Комментарий номер 1', post = Post1, user = User1)
+Comment2 = Comment.objects.create(text = 'Комментарий номер 2', post = Post1, user = User2)
+Comment3 = Comment.objects.create(text = 'Комментарий номер 3', post = Post2, user = User1)
+Comment4 = Comment.objects.create(text = 'Комментарий номер 4', post = Post3, user = User2)
+
+Post1.like(),Post1.like(),Post1.like(),Post1.like(),Post1.like()
+Post1.dislike() Post1.dislike()
+Post1.save()
+Post2.like(),Post2.like(),Post2.like(),Post2.like()
+Post2.dislike()
+Post2.save()
+Post3.like(),Post3.like(),Post3.like()
+Post3.dislike(),Post3.dislike()
+Post3.save()
+
+Comment1.like(),Comment1.like()
+Comment1.dislike()
+Comment1.save()
+Comment2.like(),Comment2.like()
+Comment2.save()
+Comment3.like()
+Comment3.dislike()
+Comment3.save()
+Comment4.like(),Comment4.like(),Comment4.like()
+Comment4.save()
+
+Author1.update_rating()
+Author2.update_rating()
+
+User.objects.order_by('-author__rating').values('username','author__rating').first()
+
+best_post = Post.objects.order_by('-rating').first()
+best_post.author.user.username
+best_post.rating
+best_post.title
+best_post.preview()
+
+Comment.objects.filter(post = best_post).values('time_in','user','rating','text')
+
